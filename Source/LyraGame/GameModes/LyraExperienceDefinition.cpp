@@ -3,3 +3,7 @@
 
 #include "GameModes/LyraExperienceDefinition.h"
 
+ULyraExperienceDefinition::ULyraExperienceDefinition()
+{
+
+}

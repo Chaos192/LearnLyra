@@ -6,6 +6,9 @@
 #include "ModularGameMode.h"
 #include "LyraGameMode.generated.h"
 
+class ULyraPawnData;
+class ULyraExperienceDefinition;
+
 /**
  *
  */
@@ -17,4 +20,6 @@ class LYRAGAME_API ALyraGameMode : public AModularGameModeBase
 public:
 
 	ALyraGameMode(const FObjectInitializer& ObjectInitializer);
+
+	const ULyraPawnData* GetPawnDataForController(const AController* InController) const;
 };
