@@ -12,7 +12,9 @@
 ALyraPlayerState::ALyraPlayerState(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
 {
-
+	AbilitySystemComponent = ObjectInitializer.CreateDefaultSubobject<ULyraAbilitySystemComponent>(this, TEXT("AbilitySystemComponent"));
+	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 }
 
 void ALyraPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -53,7 +55,7 @@ void ALyraPlayerState::SetPawnData(const ULyraPawnData* InPawnData)
 	//MARK_PROPERTY_DIRTY_FROM_NAME(ThisClass, PawnData, this);
 	PawnData = InPawnData;
 
-	// TODO: 添加GA
+	// TODO: sola添加GA
 
 	ForceNetUpdate();
 }
@@ -76,7 +78,7 @@ void ALyraPlayerState::PostInitializeComponents()
 		check(GameState);
 		ULyraExperienceManagerComponent* ExperienceComponent = GameState->FindComponentByClass<ULyraExperienceManagerComponent>();
 		check(ExperienceComponent);
-
+		ExperienceComponent->CallOrRegister_OnExperienceLoaded(FOnLyraExperienceLoaded::FDelegate::CreateUObject(this, &ThisClass::OnExperienceLoaded));
 	}
 }
 

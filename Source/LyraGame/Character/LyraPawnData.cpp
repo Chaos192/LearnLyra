@@ -3,3 +3,7 @@
 
 #include "Character/LyraPawnData.h"
 
+ULyraPawnData::ULyraPawnData(const FObjectInitializer& ObjectInitializer)
+{
+	PawnClass = nullptr;
+}

@@ -7,11 +7,14 @@
 #include "LyraCharacter.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class LYRAGAME_API ALyraCharacter : public AModularCharacter
 {
 	GENERATED_BODY()
-	
+
+public:
+
+	ALyraCharacter(const FObjectInitializer& ObjectInitializer);
 };

@@ -22,7 +22,8 @@ public class LyraGame : ModuleRules
             "InputCore",
             "GameplayTags",
             "GameplayTasks",
-            "GameplayAbilities"
+            "GameplayAbilities",
+            "GameFeatures"
         });
 
         PrivateDependencyModuleNames.AddRange(new string[] { });

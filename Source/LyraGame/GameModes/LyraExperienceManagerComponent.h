@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/GameStateComponent.h"
+#include "GameFeaturePluginOperationResult.h"
 #include "LyraExperienceManagerComponent.generated.h"
 
 class ULyraExperienceDefinition;
@@ -14,6 +15,7 @@ enum class ELyraExperienceLoadState
 {
 	UnLoaded,
 	Loading,
+	LoadingGameFeatures,
 	Loaded,
 };
 
@@ -31,6 +33,8 @@ public:
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	void ServerSetCurrentExperience(FPrimaryAssetId ExperienceId);
+
 	// 一旦体验被加载,确保代理被调用
 	// 如果体验已经加载,立即调用代理
 	// &&右值引用
@@ -46,12 +50,19 @@ private:
 		void OnRep_CurrentExperience();
 
 	void StartExperienceLoad();
+	void OnExperienceLoadComplete();
+	void OnGameFeaturePluginLoadComplete(const UE::GameFeatures::FResult& Result);
+	void OnExperienceFullLoadCompleted();
 
 	UPROPERTY(ReplicatedUsing = OnRep_CurrentExperience)
 		const ULyraExperienceDefinition* CurrentExperience;
 
 	ELyraExperienceLoadState LoadState = ELyraExperienceLoadState::UnLoaded;
 
+	int32 NumGameFeaturePluginsLoading = 0;
+	TArray<FString> GameFeaturePluginURLs;
+
 	// 体验完成加载后调用的代理
+	FOnLyraExperienceLoaded OnExperienceLoaded;
 	FOnLyraExperienceLoaded OnExperienceLoaded_LowPriority;
 };

@@ -3,3 +3,8 @@
 
 #include "Character/LyraCharacter.h"
 
+ALyraCharacter::ALyraCharacter(const FObjectInitializer& ObjectInitializer)
+	:Super(ObjectInitializer)
+{
+
+}

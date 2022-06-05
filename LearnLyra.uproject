@@ -1,41 +1,45 @@
 {
-	"FileVersion": 3,
-	"EngineAssociation": "{F71204AF-415F-F4D2-5447-DAB9C1595050}",
-	"Category": "",
-	"Description": "",
-	"Modules": [
-		{
-			"Name": "LyraGame",
-			"Type": "Runtime",
-			"LoadingPhase": "Default",
-			"AdditionalDependencies": [
-				"ModularGameplayActors",
-				"Engine",
-				"ModularGameplay",
-				"CommonGame",
-				"GameplayAbilities"
-			]
-		}
-	],
-	"Plugins": [
-		{
-			"Name": "ModelingToolsEditorMode",
-			"Enabled": true,
-			"TargetAllowList": [
-				"Editor"
-			]
-		},
-		{
-			"Name": "GameFeatures",
-			"Enabled": true
-		},
-		{
-			"Name": "ModularGameplay",
-			"Enabled": true
-		},
-		{
-			"Name": "GameplayAbilities",
-			"Enabled": true
-		}
-	]
+    "FileVersion": 3,
+    "EngineAssociation": "{F71204AF-415F-F4D2-5447-DAB9C1595050}",
+    "Category": "",
+    "Description": "",
+    "Modules": [
+        {
+            "Name": "LyraGame",
+            "Type": "Runtime",
+            "LoadingPhase": "Default",
+            "AdditionalDependencies": [
+                "ModularGameplayActors",
+                "Engine",
+                "ModularGameplay",
+                "CommonGame",
+                "GameplayAbilities"
+            ]
+        }
+    ],
+    "Plugins": [
+        {
+            "Name": "ModelingToolsEditorMode",
+            "Enabled": true,
+            "TargetAllowList": [
+                "Editor"
+            ]
+        },
+        {
+            "Name": "GameFeatures",
+            "Enabled": true
+        },
+        {
+            "Name": "ModularGameplay",
+            "Enabled": true
+        },
+        {
+            "Name": "GameplayAbilities",
+            "Enabled": true
+        },
+        {
+            "Name": "ShooterCore",
+            "Enabled": true
+        }
+    ]
 }
