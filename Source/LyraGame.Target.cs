@@ -2,6 +2,10 @@
 
 using UnrealBuildTool;
 using System.Collections.Generic;
+using System;
+using System.IO;
+using EpicGames.Core;
+using UnrealBuildBase;
 
 public class LyraGameTarget : TargetRules
 {
