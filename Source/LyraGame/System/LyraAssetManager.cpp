@@ -5,6 +5,11 @@
 #include "Character/LyraPawnData.h"
 #include "LyraLogChannels.h"
 #include "Stats/StatsMisc.h"
+#include "LyraGameplayTags.h"
+#include "AbilitySystemGlobals.h"
+
+#define STARTUP_JOB_WEIGHTED(JobFunc, JobWeight) StartupJobs.Add(FLyraAssetManagerStartupJob(#JobFunc, [this](const FLyraAssetManagerStartupJob& StartupJob, TSharedPtr<FStreamableHandle>& LoadHandle){JobFunc;}, JobWeight))
+#define STARTUP_JOB(JobFunc) STARTUP_JOB_WEIGHTED(JobFunc, 1.0f)
 
 ULyraAssetManager::ULyraAssetManager()
 {
@@ -24,6 +29,17 @@ ULyraAssetManager& ULyraAssetManager::Get()
 
 	// 上面的致命错误阻止调用到这里
 	return *NewObject<ULyraAssetManager>();
+}
+
+void ULyraAssetManager::StartInitialLoading()
+{
+	// OnAssetManagerCreatedDelegate 代理绑定UGameFeaturesSubsystem::OnAssetManagerCreated
+	// 间接调用 UGameFeatureAction_AddInputConfig::OnGameFeatureRegistering
+	Super::StartInitialLoading();
+
+	STARTUP_JOB(InitializeAbilitySystem());
+
+	DoAllStartupJobs();
 }
 
 const ULyraPawnData* ULyraAssetManager::GetDefaultPawnData() const
@@ -47,4 +63,34 @@ UObject* ULyraAssetManager::SynchronousLoadAsset(const FSoftObjectPath& AssetPat
 	}
 
 	return nullptr;
+}
+
+void ULyraAssetManager::DoAllStartupJobs()
+{
+	if (IsRunningDedicatedServer())
+	{
+		// 先不管DS
+	}
+	else
+	{
+		if (StartupJobs.Num() > 0)
+		{
+			// 先不管加载进度(可能是用于UI显示加载百分比的)和权重
+
+			for (FLyraAssetManagerStartupJob& StartupJob : StartupJobs)
+			{
+				StartupJob.DoJob();
+			}
+		}
+	}
+
+	StartupJobs.Empty();
+}
+
+void ULyraAssetManager::InitializeAbilitySystem()
+{
+	FLyraGameplayTags::InitializeNativeTags();
+
+	// 必须调用InitGlobalData()来使用TargetData
+	UAbilitySystemGlobals::Get().InitGlobalData();
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/AssetManager.h"
+#include "LyraAssetManagerStartupJob.h"
 #include "LyraAssetManager.generated.h"
 
 class ULyraPawnData;
@@ -22,6 +23,11 @@ public:
 
 	static ULyraAssetManager& Get();
 
+	// ~UAssetManager interface
+	// 引擎启动时,UEngine::InitializeObjectReferences()创建AssetManager,并调用此函数进行初始化
+	virtual void StartInitialLoading() override;
+	// ~End of UAssetManager interface
+
 	// 返回资产,如果不存在就同步加载
 	template<typename AssetType>
 	static AssetType* GetAsset(const TSoftObjectPtr<AssetType>& AssetPointer, bool bKeepInMemory = true);
@@ -34,6 +40,16 @@ protected:
 
 	UPROPERTY(config)
 		TSoftObjectPtr<ULyraPawnData> DefaultPawnData;
+
+private:
+
+	// Flushes the StartupJobs array. Processes all startup work.
+	void DoAllStartupJobs();
+
+	void InitializeAbilitySystem();
+
+	// The list of tasks to execute on startup. Used to track startup progress.
+	TArray<FLyraAssetManagerStartupJob> StartupJobs;
 };
 
 template<typename AssetType>
