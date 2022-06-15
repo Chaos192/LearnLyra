@@ -12,8 +12,12 @@ struct FLyraAssetManagerStartupJob
 	float JobWeight;
 
 	/** Simple job that is all synchronous */
-	FLyraAssetManagerStartupJob(const FString& InJobName, const TFunction<void(const FLyraAssetManagerStartupJob&, TSharedPtr<FStreamableHandle>&)>& InJobFunc, float InJobWeight)
-		: JobFunc(JobFunc),
+	FLyraAssetManagerStartupJob(
+		const FString& InJobName,
+		const TFunction<void(const FLyraAssetManagerStartupJob&, TSharedPtr<FStreamableHandle>&)>& InJobFunc,
+		float InJobWeight
+	)
+		: JobFunc(InJobFunc),
 		JobName(InJobName),
 		JobWeight(InJobWeight)
 	{
