@@ -3,3 +3,7 @@
 
 #include "Input/LyraInputComponent.h"
 
+ULyraInputComponent::ULyraInputComponent(const FObjectInitializer& ObjectInitializer)
+{
+
+}
