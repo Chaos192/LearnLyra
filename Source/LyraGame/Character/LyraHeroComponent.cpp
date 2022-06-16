@@ -4,11 +4,15 @@
 #include "Player/LyraPlayerState.h"
 #include "Character/LyraPawnData.h"
 #include "Player/LyraPlayerController.h"
+#include "EnhancedInputSubsystems.h"
+#include "Input/LyraInputConfig.h"
+#include "LyraGameplayTags.h"
+#include "Input/LyraInputComponent.h"
 
 ULyraHeroComponent::ULyraHeroComponent(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
 {
-
+	bPawnHasInitialized = false;
 }
 
 void ULyraHeroComponent::OnRegister()
@@ -75,5 +79,56 @@ void ULyraHeroComponent::InitializePlayerInput(UInputComponent* PlayerInputCompo
 	check(PlayerInputComponent);
 
 	const APawn* Pawn = GetPawn<APawn>();
-	// TODO: sola 从这里开始
+	if (!Pawn)
+	{
+		return;
+	}
+
+	const APlayerController* PC = GetController<APlayerController>();
+	check(PC);
+
+	const ULocalPlayer* LP = PC->GetLocalPlayer();
+	check(LP);
+
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = LP->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+	check(Subsystem);
+
+	Subsystem->ClearAllMappings();
+
+	if (const ULyraPawnExtensionComponent* PawnExtComp = ULyraPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+	{
+		// PawnData: HeroData_ShooterGame
+		if (const ULyraPawnData* PawnData = PawnExtComp->GetPawnData<ULyraPawnData>())
+		{
+			// InputConfig: InputData_Hero,配置InputAction到GameplayTag的映射
+			if (const ULyraInputConfig* InputConfig = PawnData->InputConfig)
+			{
+				const FLyraGameplayTags& GameplayTags = FLyraGameplayTags::Get();
+
+				ULyraInputComponent* LyraIC = CastChecked<ULyraInputComponent>(PlayerInputComponent);
+				// 应用ULyraSettingsLocal::RegisteredInputConfigs中储存的FKey到InputAction的映射
+				// 配置在 IMC_Default_KBM
+				LyraIC->AddInputMappings(InputConfig, Subsystem);
+
+				// ULyraSettingsLocal代理,暂不处理
+
+				// 根据GameplayTag,找到InputData_Hero中配置的InputAction
+				// 然后将InputAction绑定到回调函数
+				// 这里其实是将GameplayTag到回调函数的映射写死
+				LyraIC->BindNativeAction(InputConfig, GameplayTags.InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move, false);
+			}
+		}
+	}
+
+	if (ensure(!bReadyToBindInputs))
+	{
+		bReadyToBindInputs = true;
+	}
+
+	// UGameFrameworkComponentManager::SendGameFrameworkComponentExtensionEvent, 暂不处理
+}
+
+void ULyraHeroComponent::Input_Move(const FInputActionValue& InputActionValue)
+{
+	// TODO: sola 移动代理函数
 }

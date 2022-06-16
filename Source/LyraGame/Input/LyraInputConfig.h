@@ -7,11 +7,14 @@
 #include "LyraInputConfig.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class LYRAGAME_API ULyraInputConfig : public UDataAsset
 {
 	GENERATED_BODY()
-	
+
+public:
+
+	ULyraInputConfig(const FObjectInitializer& ObjectInitializer);
 };

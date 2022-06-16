@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Character/LyraPawnComponent.h"
+#include "InputActionValue.h"
+
 #include "LyraHeroComponent.generated.h"
 
 class UInputComponent;
@@ -27,6 +29,11 @@ protected:
 
 	virtual void InitializePlayerInput(UInputComponent* PlayerInputComponent);
 
+	void Input_Move(const FInputActionValue& InputActionValue);
+
 	// True when the pawn has fully finished initialization
 	bool bPawnHasInitialized;
+
+	// True when player input bindings have been applyed, will never be true for non-players
+	bool bReadyToBindInputs;
 };

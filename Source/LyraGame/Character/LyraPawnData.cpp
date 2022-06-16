@@ -6,4 +6,5 @@
 ULyraPawnData::ULyraPawnData(const FObjectInitializer& ObjectInitializer)
 {
 	PawnClass = nullptr;
+	InputConfig = nullptr;
 }
