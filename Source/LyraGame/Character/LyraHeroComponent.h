@@ -6,8 +6,10 @@
 #include "Character/LyraPawnComponent.h"
 #include "LyraHeroComponent.generated.h"
 
+class UInputComponent;
+
 /**
- *
+ * B_Hero_ShooterMannequin继承的B_Hero_Default蓝图挂载的组件
  */
 UCLASS(Blueprintable, meta = (BlueprintSpawnableComponent))
 class LYRAGAME_API ULyraHeroComponent : public ULyraPawnComponent
@@ -16,4 +18,15 @@ class LYRAGAME_API ULyraHeroComponent : public ULyraPawnComponent
 
 public:
 	ULyraHeroComponent(const FObjectInitializer& ObjectInitializer);
+
+protected:
+
+	virtual void OnRegister() override;
+
+	void OnPawnReadyToInitialize();
+
+	virtual void InitializePlayerInput(UInputComponent* PlayerInputComponent);
+
+	// True when the pawn has fully finished initialization
+	bool bPawnHasInitialized;
 };

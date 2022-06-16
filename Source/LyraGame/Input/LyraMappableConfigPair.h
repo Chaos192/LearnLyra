@@ -69,6 +69,10 @@ public:
 	UPROPERTY(EditAnywhere)
 		ECommonInputType Type = ECommonInputType::Count;
 
+	/** if true,这个输入配置会在关联的GameFeature激活时激活 */
+	UPROPERTY(EditAnywhere)
+		bool bShouldActivateAutomatically = true;
+
 	/** 注册配置中的映射 */
 	static bool RegisterPair(const FMappableConfigPair& Pair);
 };

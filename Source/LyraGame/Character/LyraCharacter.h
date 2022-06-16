@@ -6,6 +6,8 @@
 #include "ModularCharacter.h"
 #include "LyraCharacter.generated.h"
 
+class ULyraPawnExtensionComponent;
+
 /**
  *
  */
@@ -17,4 +19,14 @@ class LYRAGAME_API ALyraCharacter : public AModularCharacter
 public:
 
 	ALyraCharacter(const FObjectInitializer& ObjectInitializer);
+
+protected:
+
+	// APawn::PawnClientRestart()调用
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+private:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Lyra|Character", Meta = (AllowPrivateAccess = "true"))
+		ULyraPawnExtensionComponent* PawnExtComponent;
 };

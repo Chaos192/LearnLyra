@@ -14,6 +14,7 @@
 #include "TimerManager.h"
 #include "GameModes/LyraWorldSettings.h"
 #include "LyraLogChannels.h"
+#include "Character/LyraPawnExtensionComponent.h"
 
 ALyraGameMode::ALyraGameMode(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -92,7 +93,17 @@ APawn* ALyraGameMode::SpawnDefaultPawnAtTransform_Implementation(AController* Ne
 	{
 		if (APawn* SpawnedPawn = GetWorld()->SpawnActor<APawn>(PawnClass, SpawnTransform, SpawnInfo))
 		{
-			// TODO: sola ULyraPawnExtensionComponent初始化
+			if (ULyraPawnExtensionComponent* PawnExtComp = ULyraPawnExtensionComponent::FindPawnExtensionComponent(SpawnedPawn))
+			{
+				if (const ULyraPawnData* PawnData = GetPawnDataForController(NewPlayer))
+				{
+					PawnExtComp->SetPawnData(PawnData);
+				}
+				else
+				{
+					UE_LOG(LogLyra, Error, TEXT("Game mode was unable to set PawnData on the spawned pawn [%s]."), *GetNameSafe(SpawnedPawn));
+				}
+			}
 
 			SpawnedPawn->FinishSpawning(SpawnTransform);
 
