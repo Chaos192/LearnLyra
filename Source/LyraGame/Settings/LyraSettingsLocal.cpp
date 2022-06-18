@@ -34,3 +34,21 @@ void ULyraSettingsLocal::RegisterInputConfig(ECommonInputType Type, const UPlaye
 	}
 }
 
+void ULyraSettingsLocal::ActivateInputConfig(const UPlayerMappableInputConfig* Config)
+{
+	if (Config)
+	{
+		const int32 ExistingConfigIndex = RegisteredInputConfigs.IndexOfByPredicate(
+			[&Config](const FLoadedMappableConfigPair& Pair)
+			{
+				return Pair.Config == Config;
+			}
+		);
+
+		if (ExistingConfigIndex != INDEX_NONE)
+		{
+			RegisteredInputConfigs[ExistingConfigIndex].bIsActive = true;
+		}
+	}
+}
+

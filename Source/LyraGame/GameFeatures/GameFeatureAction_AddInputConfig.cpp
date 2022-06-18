@@ -22,7 +22,7 @@ void UGameFeatureAction_AddInputConfig::OnGameFeatureActivating(FGameFeatureActi
 	{
 		if (Pair.bShouldActivateAutomatically)
 		{
-			FMappableConfigPair::RegisterPair(Pair);
+			FMappableConfigPair::ActivatePair(Pair);
 		}
 	}
 }

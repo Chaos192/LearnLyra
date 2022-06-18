@@ -4,7 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "GameplayTagContainer.h"
+
 #include "LyraInputConfig.generated.h"
+
+class UInputAction;
+
+USTRUCT(BlueprintType)
+struct FLyraInputAction
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(EditDefaultsOnly)
+		const UInputAction* InputAction = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, meta = (Categories = "InputTag"))
+		FGameplayTag InputTag;
+};
 
 /**
  *
@@ -17,4 +35,11 @@ class LYRAGAME_API ULyraInputConfig : public UDataAsset
 public:
 
 	ULyraInputConfig(const FObjectInitializer& ObjectInitializer);
+
+	const UInputAction* FindNativeInputActionForTag(const FGameplayTag& InputTag, bool bLogNotFound = true) const;
+
+public:
+	// 玩家使用的输入事件,这些事件映射到GameplayTag,并且必须手动绑定
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (TitleProperty = "InputAction"))
+		TArray<FLyraInputAction> NativeInputActions;
 };

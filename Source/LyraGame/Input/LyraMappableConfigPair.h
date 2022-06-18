@@ -75,4 +75,7 @@ public:
 
 	/** 注册配置中的映射 */
 	static bool RegisterPair(const FMappableConfigPair& Pair);
+
+	/** 激活设置中的映射,如果没有还会注册这个映射 */
+	static bool ActivatePair(const FMappableConfigPair& Pair);
 };

@@ -31,6 +31,14 @@ public:
 	 */
 	void RegisterInputConfig(ECommonInputType Type, const UPlayerMappableInputConfig* NewConfig, const bool bIsActive);
 
+	void ActivateInputConfig(const UPlayerMappableInputConfig* Config);
+
+	/** 获取注册的输入配置 */
+	const TArray<FLoadedMappableConfigPair>& GetAllRegisteredInputConfigs()
+	{
+		return RegisteredInputConfigs;
+	}
+
 private:
 
 	/**

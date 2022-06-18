@@ -20,3 +20,22 @@ bool FMappableConfigPair::RegisterPair(const FMappableConfigPair& Pair)
 	return false;
 }
 
+bool FMappableConfigPair::ActivatePair(const FMappableConfigPair& Pair)
+{
+	ULyraAssetManager& AssetManager = ULyraAssetManager::Get();
+
+	if (FMappableConfigPair::RegisterPair(Pair))
+	{
+		if (ULyraSettingsLocal* Settings = ULyraSettingsLocal::Get())
+		{
+			if (const UPlayerMappableInputConfig* LoadedConfig = AssetManager.GetAsset(Pair.Config))
+			{
+				Settings->ActivateInputConfig(LoadedConfig);
+				return true;
+			}
+		}
+	}
+	
+	return false;
+}
+

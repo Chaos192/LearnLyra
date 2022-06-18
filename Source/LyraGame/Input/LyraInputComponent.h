@@ -11,6 +11,8 @@
 /**
  * 配置 UInputSettings::DefaultInputComponentClass
  * 在 APlayerController::SetupInputComponent() 中创建
+ * 调用内置函数 IEnhancedInputSubsystemInterface::AddPlayerMappableConfig() 绑定FKey到UInputAction的映射
+ * 调用内置函数 UEnhancedInputComponent::BindAction() 绑定UInputAction到代理函数
  */
 UCLASS()
 class LYRAGAME_API ULyraInputComponent : public UEnhancedInputComponent
@@ -35,5 +37,9 @@ template<class UserClass, typename FuncType>
 void ULyraInputComponent::BindNativeAction(const ULyraInputConfig* InputConfig, const FGameplayTag& InputTag, ETriggerEvent TriggerEvent, UserClass* Object, FuncType Func, bool bLogIfNotFound)
 {
 	check(InputConfig);
-	// TODO: sola 按键绑定核心函数
+	if (const UInputAction* IA = InputConfig->FindNativeInputActionForTag(InputTag, bLogIfNotFound))
+	{
+		// 内置函数,绑定UInputAction到代理函数
+		BindAction(IA, TriggerEvent, Object, Func);
+	}
 }
