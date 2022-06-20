@@ -29,4 +29,8 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Lyra|Character", Meta = (AllowPrivateAccess = "true"))
 		ULyraPawnExtensionComponent* PawnExtComponent;
+
+public:
+
+	void ToggleCrouch();
 };

@@ -1,5 +1,6 @@
 #include "Character/LyraCharacter.h"
 #include "Character/LyraPawnExtensionComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ALyraCharacter::ALyraCharacter(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -13,4 +14,19 @@ void ALyraCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PawnExtComponent->SetupPlayerInputComponent();
+}
+
+void ALyraCharacter::ToggleCrouch()
+{
+	// TODO: sola 和移动组件关联
+	const UCharacterMovementComponent* LyraMoveComp = GetCharacterMovement();
+
+	if (bIsCrouched || LyraMoveComp->bWantsToCrouch)
+	{
+		UnCrouch();
+	}
+	else
+	{
+		Crouch();
+	}
 }

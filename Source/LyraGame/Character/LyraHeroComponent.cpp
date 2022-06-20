@@ -8,6 +8,7 @@
 #include "Input/LyraInputConfig.h"
 #include "LyraGameplayTags.h"
 #include "Input/LyraInputComponent.h"
+#include "Character/LyraCharacter.h"
 
 ULyraHeroComponent::ULyraHeroComponent(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -116,6 +117,8 @@ void ULyraHeroComponent::InitializePlayerInput(UInputComponent* PlayerInputCompo
 				// 然后将InputAction绑定到回调函数
 				// 这里其实是将GameplayTag到回调函数的映射写死
 				LyraIC->BindNativeAction(InputConfig, GameplayTags.InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move, false);
+				LyraIC->BindNativeAction(InputConfig, GameplayTags.InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ThisClass::Input_LookMouse, false);
+				LyraIC->BindNativeAction(InputConfig, GameplayTags.InputTag_Crouch, ETriggerEvent::Triggered, this, &ThisClass::Input_Crouch, false);
 			}
 		}
 	}
@@ -149,5 +152,35 @@ void ULyraHeroComponent::Input_Move(const FInputActionValue& InputActionValue)
 			const FVector MovementDirection = MovementRotation.RotateVector(FVector::ForwardVector);
 			Pawn->AddMovementInput(MovementDirection, Value.Y);
 		}
+	}
+}
+
+void ULyraHeroComponent::Input_LookMouse(const FInputActionValue& InputActionValue)
+{
+	APawn* Pawn = GetPawn<APawn>();
+
+	if (!Pawn)
+	{
+		return;
+	}
+
+	const FVector2D Value = InputActionValue.Get<FVector2D>();
+
+	if (Value.X != 0.0f)
+	{
+		Pawn->AddControllerYawInput(Value.X);
+	}
+
+	if (Value.Y != 0.0f)
+	{
+		Pawn->AddControllerPitchInput(Value.Y * -1.0f);
+	}
+}
+
+void ULyraHeroComponent::Input_Crouch(const FInputActionValue& InputActionValue)
+{
+	if (ALyraCharacter* Character = GetPawn<ALyraCharacter>())
+	{
+		Character->ToggleCrouch();
 	}
 }

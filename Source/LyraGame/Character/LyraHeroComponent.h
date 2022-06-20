@@ -30,6 +30,8 @@ protected:
 	virtual void InitializePlayerInput(UInputComponent* PlayerInputComponent);
 
 	void Input_Move(const FInputActionValue& InputActionValue);
+	void Input_LookMouse(const FInputActionValue& InputActionValue);
+	void Input_Crouch(const FInputActionValue& InputActionValue);
 
 	// True when the pawn has fully finished initialization
 	bool bPawnHasInitialized;

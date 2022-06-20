@@ -20,6 +20,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		const UInputAction* InputAction = nullptr;
 
+	// Categories = "InputTag": GameplayTag只能选InputTag.XXX
 	UPROPERTY(EditDefaultsOnly, meta = (Categories = "InputTag"))
 		FGameplayTag InputTag;
 };
