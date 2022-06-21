@@ -104,6 +104,11 @@ void ULyraPawnExtensionComponent::OnPawnReadyToInitialize_RegisterAndCall(FSimpl
 	}
 }
 
+void ULyraPawnExtensionComponent::OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate Delegate)
+{
+
+}
+
 void ULyraPawnExtensionComponent::OnRep_PawnData()
 {
 	CheckPawnReadyToInitialize();

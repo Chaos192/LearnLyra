@@ -5,6 +5,7 @@
 #include "LyraPawnExtensionComponent.generated.h"
 
 class ULyraPawnData;
+class ULyraAbilitySystemComponent;
 
 /**
  * ALyraCharacter构造函数中生成
@@ -29,6 +30,12 @@ public:
 
 	void SetPawnData(const ULyraPawnData* InPawnData);
 
+	UFUNCTION(BlueprintPure, Category = "Lyra|Pawn")
+		ULyraAbilitySystemComponent* GetLyraAbilitySystemComponent() const
+	{
+		return AbilitySystemComponent;
+	}
+
 	// ALyraCharacter::SetupPlayerInputComponent()调用
 	void SetupPlayerInputComponent();
 
@@ -38,10 +45,16 @@ public:
 	// Register with the OnPawnReadyToInitialize delegate and broadcast if condition is already met.
 	void OnPawnReadyToInitialize_RegisterAndCall(FSimpleMulticastDelegate::FDelegate Delegate);
 
+	// Register with the OnAbilitySystemInitialized delegate and broadcast if condition is already met.
+	void OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate Delegate);
+
 protected:
 
 	// Delegate fired when pawn has everything needed for initialization.
 	FSimpleMulticastDelegate OnPawnReadyToInitialize;
+
+	// 当Pawn成为Avatar Actor时广播此代理
+	FSimpleMulticastDelegate OnAbilitySystemInitialized;
 
 	// Pawn data used to create the pawn.  Specified from a spawn function or on a placed instance.
 	UPROPERTY(EditInstanceOnly, ReplicatedUsing = OnRep_PawnData, Category = "Lyra|Pawn")
@@ -49,6 +62,10 @@ protected:
 
 	UFUNCTION()
 		void OnRep_PawnData();
+
+	// 缓存ASC方便使用
+	UPROPERTY()
+		ULyraAbilitySystemComponent* AbilitySystemComponent;
 
 	// True when the pawn has everything needed for initialization.
 	int32 bPawnReadyToInitialize : 1;
