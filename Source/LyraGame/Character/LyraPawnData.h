@@ -7,9 +7,10 @@
 #include "LyraPawnData.generated.h"
 
 class ULyraInputConfig;
+class ULyraAbilitySet;
 
 /**
- *
+ * 一个实例: HeroData_ShooterGame
  */
 UCLASS(BlueprintType, Const, Meta = (DisplayName = "Lyra Pawn Data", ShortTooltip = "Data asset used to define a Pawn."))
 class LYRAGAME_API ULyraPawnData : public UPrimaryDataAsset
@@ -23,6 +24,10 @@ public:
 	// 用于实例化Pawn的Class,应该继承ALyraCharacter
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Lyra|Pawn")
 		TSubclassOf<APawn> PawnClass;
+
+	// 要赋予这个pawn的ability system的Ability sets
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Lyra|Abilities")
+		TArray<ULyraAbilitySet*> AbilitySets;
 
 	// Input configuration used by player controlled pawns to create input mappings and bind input actions.
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Lyra|Input")

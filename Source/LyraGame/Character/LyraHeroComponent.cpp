@@ -9,6 +9,7 @@
 #include "LyraGameplayTags.h"
 #include "Input/LyraInputComponent.h"
 #include "Character/LyraCharacter.h"
+#include "AbilitySystem/LyraAbilitySystemComponent.h"
 
 ULyraHeroComponent::ULyraHeroComponent(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -61,7 +62,9 @@ void ULyraHeroComponent::OnPawnReadyToInitialize()
 	{
 		PawnData = PawnExtComp->GetPawnData<ULyraPawnData>();
 
-		// TODO: sola 初始化ASC
+		// PS维护这个Player的持续性数据(死亡和多Pawn时都存在的状态)
+		// ASC和AttributeSet都存在于PS
+		PawnExtComp->InitializeAbilitySystem(LyraPS->GetLyraAbilitySystemComponent(), LyraPS);
 	}
 
 	if (ALyraPlayerController* LyraPC = GetController<ALyraPlayerController>())
@@ -113,6 +116,15 @@ void ULyraHeroComponent::InitializePlayerInput(UInputComponent* PlayerInputCompo
 
 				// ULyraSettingsLocal代理,暂不处理
 
+				TArray<uint32> BindHandles;
+				LyraIC->BindAbilityActions(
+					InputConfig,
+					this,
+					&ThisClass::Input_AbilityInputTagPressed,
+					&ThisClass::Input_AbilityInputTagReleased,
+					BindHandles
+				);
+
 				// 根据GameplayTag,找到InputData_Hero中配置的InputAction
 				// 然后将InputAction绑定到回调函数
 				// 这里其实是将GameplayTag到回调函数的映射写死
@@ -129,6 +141,34 @@ void ULyraHeroComponent::InitializePlayerInput(UInputComponent* PlayerInputCompo
 	}
 
 	// UGameFrameworkComponentManager::SendGameFrameworkComponentExtensionEvent, 暂不处理
+}
+
+void ULyraHeroComponent::Input_AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	if (const APawn* Pawn = GetPawn<APawn>())
+	{
+		if (const ULyraPawnExtensionComponent* PawnExtComp = ULyraPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+		{
+			if (ULyraAbilitySystemComponent* LyraASC = PawnExtComp->GetLyraAbilitySystemComponent())
+			{
+				LyraASC->AbilityInputTagPressed(InputTag);
+			}
+		}
+	}
+}
+
+void ULyraHeroComponent::Input_AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	if (const APawn* Pawn = GetPawn<APawn>())
+	{
+		if (const ULyraPawnExtensionComponent* PawnExtComp = ULyraPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
+		{
+			if (ULyraAbilitySystemComponent* LyraASC = PawnExtComp->GetLyraAbilitySystemComponent())
+			{
+				LyraASC->AbilityInputTagReleased(InputTag);
+			}
+		}
+	}
 }
 
 void ULyraHeroComponent::Input_Move(const FInputActionValue& InputActionValue)

@@ -26,7 +26,7 @@ public:
 };
 
 /**
- *
+ * 一个实例: InputData_Hero
  */
 UCLASS()
 class LYRAGAME_API ULyraInputConfig : public UDataAsset
@@ -43,4 +43,8 @@ public:
 	// 玩家使用的输入事件,这些事件映射到GameplayTag,并且必须手动绑定
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (TitleProperty = "InputAction"))
 		TArray<FLyraInputAction> NativeInputActions;
+
+	// 玩家使用的输入事件,这些事件映射到GameplayTag,并且自动绑定到对应InputTag的GA
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (TitleProperty = "InputAction"))
+		TArray<FLyraInputAction> AbilityInputActions;
 };

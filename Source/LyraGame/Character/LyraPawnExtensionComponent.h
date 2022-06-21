@@ -21,7 +21,7 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray< class FLifetimeProperty >& OutLifetimeProps) const override;
 
-	// Returns the pawn extension component if one exists on the specified actor.
+	// 如果指定的Actor存在pawn extension component,则返回
 	UFUNCTION(BlueprintPure, Category = "Lyra|Pawn")
 		static ULyraPawnExtensionComponent* FindPawnExtensionComponent(const AActor* Actor);
 
@@ -36,27 +36,30 @@ public:
 		return AbilitySystemComponent;
 	}
 
+	// 当Pawn变成ASC的Avatar时,由Pawn调用
+	void InitializeAbilitySystem(ULyraAbilitySystemComponent* InASC, AActor* InOwnerActor);
+
 	// ALyraCharacter::SetupPlayerInputComponent()调用
 	void SetupPlayerInputComponent();
 
-	// Call this anytime the pawn needs to check if it's ready to be initialized (pawn data assigned, possessed, etc..). 
+	// 在Pawn需要检测它是否准备好初始化,的任意时刻都调用此函数,(pawn data设置成功, possessed, 等等)
 	bool CheckPawnReadyToInitialize();
 
-	// Register with the OnPawnReadyToInitialize delegate and broadcast if condition is already met.
+	// 注册OnPawnReadyToInitialize代理,如果条件已经满足就广播
 	void OnPawnReadyToInitialize_RegisterAndCall(FSimpleMulticastDelegate::FDelegate Delegate);
 
-	// Register with the OnAbilitySystemInitialized delegate and broadcast if condition is already met.
+	// 注册OnAbilitySystemInitialized代理,如果条件已经满足就广播
 	void OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate Delegate);
 
 protected:
 
-	// Delegate fired when pawn has everything needed for initialization.
+	// pawn拥有初始化所需的所有数据时,广播的代理
 	FSimpleMulticastDelegate OnPawnReadyToInitialize;
 
 	// 当Pawn成为Avatar Actor时广播此代理
 	FSimpleMulticastDelegate OnAbilitySystemInitialized;
 
-	// Pawn data used to create the pawn.  Specified from a spawn function or on a placed instance.
+	// 用于 Spawn Pawn 的数据
 	UPROPERTY(EditInstanceOnly, ReplicatedUsing = OnRep_PawnData, Category = "Lyra|Pawn")
 		const ULyraPawnData* PawnData;
 
@@ -67,6 +70,6 @@ protected:
 	UPROPERTY()
 		ULyraAbilitySystemComponent* AbilitySystemComponent;
 
-	// True when the pawn has everything needed for initialization.
+	// pawn拥有初始化所需的所有数据时为true
 	int32 bPawnReadyToInitialize : 1;
 };

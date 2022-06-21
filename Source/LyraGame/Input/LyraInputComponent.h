@@ -31,6 +31,10 @@ public:
 	// 这里其实是将GameplayTag到回调函数的映射写死
 	template<class UserClass, typename FuncType>
 	void BindNativeAction(const ULyraInputConfig* InputConfig, const FGameplayTag& InputTag, ETriggerEvent TriggerEvent, UserClass* Object, FuncType Func, bool bLogIfNotFound);
+
+	// 绑定InputAction到GA的按下和松开回调函数,参数为GA的InputTag
+	template<class UserClass, typename PressedFuncType, typename ReleasedFuncType>
+	void BindAbilityActions(const ULyraInputConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc, TArray<uint32>& BindHandles);
 };
 
 template<class UserClass, typename FuncType>
@@ -41,5 +45,43 @@ void ULyraInputComponent::BindNativeAction(const ULyraInputConfig* InputConfig, 
 	{
 		// 内置函数,绑定UInputAction到代理函数
 		BindAction(IA, TriggerEvent, Object, Func);
+	}
+}
+
+template<class UserClass, typename PressedFuncType, typename ReleasedFuncType>
+void ULyraInputComponent::BindAbilityActions(const ULyraInputConfig* InputConfig, UserClass* Object, PressedFuncType PressedFunc, ReleasedFuncType ReleasedFunc, TArray<uint32>& BindHandles)
+{
+	check(InputConfig);
+
+	for (const FLyraInputAction& Action : InputConfig->AbilityInputActions)
+	{
+		if (Action.InputAction && Action.InputTag.IsValid())
+		{
+			if (PressedFunc)
+			{
+				BindHandles.Add(
+					BindAction(
+						Action.InputAction,
+						ETriggerEvent::Triggered,
+						Object,
+						PressedFunc,
+						Action.InputTag // 可变参数
+					).GetHandle()
+				);
+			}
+
+			if (ReleasedFunc)
+			{
+				BindHandles.Add(
+					BindAction(
+						Action.InputAction,
+						ETriggerEvent::Completed,
+						Object,
+						ReleasedFunc,
+						Action.InputTag
+					).GetHandle()
+				);
+			}
+		}
 	}
 }

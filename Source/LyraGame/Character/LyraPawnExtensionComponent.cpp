@@ -2,6 +2,7 @@
 #include "Net/UnrealNetwork.h"
 #include "LyraLogChannels.h"
 #include "Character/LyraPawnData.h"
+#include "AbilitySystem/LyraAbilitySystemComponent.h"
 
 ULyraPawnExtensionComponent::ULyraPawnExtensionComponent(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -51,6 +52,44 @@ void ULyraPawnExtensionComponent::SetPawnData(const ULyraPawnData* InPawnData)
 	Pawn->ForceNetUpdate();
 
 	CheckPawnReadyToInitialize();
+}
+
+void ULyraPawnExtensionComponent::InitializeAbilitySystem(ULyraAbilitySystemComponent* InASC, AActor* InOwnerActor)
+{
+	check(InASC);
+	check(InOwnerActor);
+
+	if (AbilitySystemComponent == InASC)
+	{
+		return;
+	}
+
+	if (AbilitySystemComponent)
+	{
+		// 暂不处理清理旧的ASC
+	}
+
+	APawn* Pawn = GetPawnChecked<APawn>();
+	AActor* ExistingAvatar = InASC->GetAvatarActor();
+
+	UE_LOG(LogLyra, Verbose, TEXT("Setting up ASC [%s] on pawn [%s] owner [%s], existing [%s] "), *GetNameSafe(InASC), *GetNameSafe(Pawn), *GetNameSafe(InOwnerActor), *GetNameSafe(ExistingAvatar));
+
+	if ((ExistingAvatar != nullptr) && (ExistingAvatar != Pawn))
+	{
+		UE_LOG(LogLyra, Log, TEXT("Existing avatar (authority=%d)"), ExistingAvatar->HasAuthority() ? 1 : 0);
+
+		// 暂不处理
+	}
+
+	AbilitySystemComponent = InASC;
+	AbilitySystemComponent->InitAbilityActorInfo(InOwnerActor, Pawn);
+
+	if (ensure(PawnData))
+	{
+		// TODO: sola 处理Tag,主要是技能打断,可能会影响当前逻辑
+	}
+
+	OnAbilitySystemInitialized.Broadcast();
 }
 
 void ULyraPawnExtensionComponent::SetupPlayerInputComponent()
@@ -106,7 +145,15 @@ void ULyraPawnExtensionComponent::OnPawnReadyToInitialize_RegisterAndCall(FSimpl
 
 void ULyraPawnExtensionComponent::OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate Delegate)
 {
+	if (!OnAbilitySystemInitialized.IsBoundToObject(Delegate.GetUObject()))
+	{
+		OnAbilitySystemInitialized.Add(Delegate);
+	}
 
+	if (AbilitySystemComponent)
+	{
+		Delegate.Execute();
+	}
 }
 
 void ULyraPawnExtensionComponent::OnRep_PawnData()

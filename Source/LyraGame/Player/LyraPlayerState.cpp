@@ -8,6 +8,7 @@
 #include "Character/LyraPawnData.h"
 #include "LyraLogChannels.h"
 #include "Net/UnrealNetwork.h"
+#include "AbilitySystem/LyraAbilitySet.h"
 
 ALyraPlayerState::ALyraPlayerState(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer)
@@ -55,7 +56,13 @@ void ALyraPlayerState::SetPawnData(const ULyraPawnData* InPawnData)
 	//MARK_PROPERTY_DIRTY_FROM_NAME(ThisClass, PawnData, this);
 	PawnData = InPawnData;
 
-	// TODO: sola添加GA
+	for (const ULyraAbilitySet* AbilitySet : PawnData->AbilitySets)
+	{
+		if (AbilitySet)
+		{
+			AbilitySet->GiveToAbilitySystem(AbilitySystemComponent, nullptr);
+		}
+	}
 
 	ForceNetUpdate();
 }
