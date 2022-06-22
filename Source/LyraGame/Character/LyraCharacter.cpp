@@ -3,6 +3,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "AbilitySystem/LyraAbilitySystemComponent.h"
 #include "LyraCharacterMovementComponent.h"
+#include "Camera/LyraCameraComponent.h"
 
 ALyraCharacter::ALyraCharacter(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer.SetDefaultSubobjectClass<ULyraCharacterMovementComponent>(ALyraCharacter::CharacterMovementComponentName))
@@ -13,6 +14,9 @@ ALyraCharacter::ALyraCharacter(const FObjectInitializer& ObjectInitializer)
 			this,
 			&ThisClass::OnAbilitySystemInitialized
 		));
+
+	//CameraComponent = CreateDefaultSubobject<ULyraCameraComponent>(TEXT("CameraComponent"));
+	//CameraComponent->SetRelativeLocation(FVector(-300.0f, 0.0f, 75.0f));
 }
 
 ULyraAbilitySystemComponent* ALyraCharacter::GetLyraAbilitySystemComponent()

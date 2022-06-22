@@ -10,6 +10,7 @@
 
 class ULyraPawnExtensionComponent;
 class ULyraAbilitySystemComponent;
+class ULyraCameraComponent;
 
 /**
  *
@@ -41,6 +42,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Lyra|Character", Meta = (AllowPrivateAccess = "true"))
 		ULyraPawnExtensionComponent* PawnExtComponent;
+
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Lyra|Character", Meta = (AllowPrivateAccess = "true"))
+	//	ULyraCameraComponent* CameraComponent;
 
 public:
 
