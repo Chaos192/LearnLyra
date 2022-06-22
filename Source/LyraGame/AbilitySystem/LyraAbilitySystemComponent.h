@@ -25,6 +25,11 @@ public:
 
 protected:
 
+	virtual void AbilitySpecInputPressed(FGameplayAbilitySpec& Spec) override;
+	virtual void AbilitySpecInputReleased(FGameplayAbilitySpec& Spec) override;
+
+protected:
+
 	// 这一帧按下的GA的handle
 	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;
 
