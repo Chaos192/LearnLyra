@@ -2,9 +2,10 @@
 #include "Character/LyraPawnExtensionComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "AbilitySystem/LyraAbilitySystemComponent.h"
+#include "LyraCharacterMovementComponent.h"
 
 ALyraCharacter::ALyraCharacter(const FObjectInitializer& ObjectInitializer)
-	:Super(ObjectInitializer)
+	:Super(ObjectInitializer.SetDefaultSubobjectClass<ULyraCharacterMovementComponent>(ALyraCharacter::CharacterMovementComponentName))
 {
 	PawnExtComponent = CreateDefaultSubobject<ULyraPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
 	PawnExtComponent->OnAbilitySystemInitialized_RegisterAndCall(

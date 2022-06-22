@@ -6,6 +6,10 @@
 #include "LyraGameplayAbility.generated.h"
 
 class ULyraAbilitySystemComponent;
+class ALyraCharacter;
+class ALyraPlayerController;
+class AController;
+class ULyraHeroComponent;
 
 /**
  * 定义GA如何激活
@@ -34,10 +38,38 @@ public:
 
 	ULyraGameplayAbility(const FObjectInitializer& ObjectInitializer);
 
+	UFUNCTION(BlueprintCallable, Category = "Lyra|Ability")
+		ULyraAbilitySystemComponent* GetLyraAbilitySystemComponentFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Lyra|Ability")
+		ALyraPlayerController* GetLyraPlayerControllerFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Lyra|Ability")
+		AController* GetControllerFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Lyra|Ability")
+		ALyraCharacter* GetLyraCharacterFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Lyra|Ability")
+		ULyraHeroComponent* GetHeroComponentFromActorInfo() const;
+
 	ELyraAbilityActivationPolicy GetActivationPolicy() const
 	{
 		return ActivationPolicy;
 	}
+
+protected:
+
+	//~UGameplayAbility interface
+	virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags /* = nullptr */, const FGameplayTagContainer* TargetTags /* = nullptr */, OUT FGameplayTagContainer* OptionalRelevantTags /* = nullptr */) const override;
+	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+	//~End of UGameplayAbility interface
+
+	// 这个GA被赋予ASC时调用
+	UFUNCTION(BlueprintImplementableEvent, Category = Ability, DisplayName = "OnAbilityAdded")
+		void K2_OnAbilityAdded();
 
 protected:
 

@@ -22,6 +22,13 @@ class LYRAGAME_API ULyraHeroComponent : public ULyraPawnComponent
 public:
 	ULyraHeroComponent(const FObjectInitializer& ObjectInitializer);
 
+	// 如果指定的Actor存在ULyraHeroComponent,返回它
+	UFUNCTION(BlueprintPure, Category = "Lyra|Hero")
+		static ULyraHeroComponent* FindHeroComponent(const AActor* Actor)
+	{
+		return (Actor ? Actor->FindComponentByClass<ULyraHeroComponent>() : nullptr);
+	}
+
 protected:
 
 	virtual void OnRegister() override;

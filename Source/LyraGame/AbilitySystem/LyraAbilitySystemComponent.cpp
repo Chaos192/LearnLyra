@@ -25,7 +25,6 @@ void ULyraAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& Inp
 			}
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("jizhixin AbilityInputTagPressed InputTag [%s], InputPressedSpecHandles.Num() [%d]"), *InputTag.ToString(), InputPressedSpecHandles.Num());
 }
 
 void ULyraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& InputTag)
@@ -68,7 +67,6 @@ void ULyraAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGam
 				{
 					// 技能是激活的,传递输入事件
 					AbilitySpecInputPressed(*AbilitySpec);
-					UE_LOG(LogTemp, Warning, TEXT("jizhixin AbilitySpecInputPressed"));
 				}
 				else
 				{
@@ -77,7 +75,6 @@ void ULyraAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGam
 					if (LyraAbilityCDO->GetActivationPolicy() == ELyraAbilityActivationPolicy::OnInputTriggered)
 					{
 						AbilitiesToActive.AddUnique(AbilitySpec->Handle);
-						UE_LOG(LogTemp, Warning, TEXT("jizhixin AbilitiesToActive.AddUnique"));
 					}
 				}
 			}
